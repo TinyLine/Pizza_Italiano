@@ -1,9 +1,14 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, Boolean, String, ForeignKey, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship, sessionmaker, DeclarativeBase
 from sqlalchemy.dialects.postgresql import JSONB
 from flask_login import UserMixin
 import bcrypt
 from datetime import datetime
+from dotenv import load_dotenv
+import os
+load_dotenv()
+PGUSER = os.getenv("PGUSER")
+PGPASSWORD = os.getenv("PGPASSWORD")  
 
 engine = create_engine(f"postgresql+psycopg2://{PGUSER}:{PGPASSWORD}@localhost:5433/online_restaurant", echo=True)
 Session = sessionmaker(bind=engine)
@@ -62,3 +67,5 @@ class Orders(Base):
     
 if __name__ == '__main__':
     Base.create_all()
+    
+  
