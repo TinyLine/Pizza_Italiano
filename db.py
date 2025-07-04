@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Boolean, String, ForeignKey, DateTime
+from sqlalchemy import create_engine, Boolean, String, ForeignKey, DateTime, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship, sessionmaker, DeclarativeBase
 from sqlalchemy.dialects.postgresql import JSONB
 from flask_login import UserMixin
@@ -68,4 +68,5 @@ class Orders(Base):
 if __name__ == '__main__':
     Base.create_all()
     
-  
+# base = Base()
+# base.create_db()
