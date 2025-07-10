@@ -12,7 +12,11 @@ PGUSER = os.getenv("PGUSER")
 PGPASSWORD = os.getenv("PGPASSWORD")
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 engine = create_engine(f"postgresql+psycopg2://{PGUSER}:{PGPASSWORD}@localhost:5432/online_restaurant", echo=True)
+=======
+engine = create_engine(f"postgresql+psycopg2://{PGUSER}:{PGPASSWORD}@localhost:5432/restaurant", echo=True)
+>>>>>>> Stashed changes
 =======
 engine = create_engine(f"postgresql+psycopg2://{PGUSER}:{PGPASSWORD}@localhost:5432/restaurant", echo=True)
 >>>>>>> Stashed changes
@@ -80,10 +84,14 @@ class Orders(Base):
 
 if __name__ == '__main__':
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     Base.metadata.create_all(engine)
     
 # base = Base()
 # base.create_db()
+=======
+    Base.create_db()
+>>>>>>> Stashed changes
 =======
     Base.create_db()
 >>>>>>> Stashed changes
