@@ -1,47 +1,36 @@
-from sqlalchemy import create_engine, Boolean, String, ForeignKey, DateTime
-from sqlalchemy.orm import Mapped, mapped_column, relationship, sessionmaker, DeclarativeBase
+from sqlalchemy import create_engine, String, Float, Integer, ForeignKey, Boolean, Text, DateTime
+from sqlalchemy.orm import Mapped, mapped_column, relationship, sessionmaker
+from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.dialects.postgresql import JSONB
-from flask_login import UserMixin
-import bcrypt
 from datetime import datetime
-from dotenv import load_dotenv
+
+from flask_login import UserMixin
+
+import bcrypt 
 import os
 
-load_dotenv()
-PGUSER = os.getenv("PGUSER")
-PGPASSWORD = os.getenv("PGPASSWORD")
+PGUSER = os.environ.get("PGUSER")
+PGPASSWORD = os.environ.get("PGPASSWORD")
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-engine = create_engine(f"postgresql+psycopg2://{PGUSER}:{PGPASSWORD}@localhost:5432/online_restaurant", echo=True)
-=======
-engine = create_engine(f"postgresql+psycopg2://{PGUSER}:{PGPASSWORD}@localhost:5432/restaurant", echo=True)
->>>>>>> Stashed changes
-=======
-engine = create_engine(f"postgresql+psycopg2://{PGUSER}:{PGPASSWORD}@localhost:5432/restaurant", echo=True)
->>>>>>> Stashed changes
+engine = create_engine(f"postgresql+psycopg2://{PGUSER}:{PGPASSWORD}@localhost:5432/italiano_restorano", echo=True)
 Session = sessionmaker(bind=engine)
 
-
 class Base(DeclarativeBase):
-    @classmethod
-    def create_db(cls):
-        cls.metadata.create_all(engine)
+    def create_db(self):
+        Base.metadata.create_all(engine)
 
-    @classmethod
-    def drop_db(cls):
-        cls.metadata.drop_all(engine)
-
+    def drop_db(self):
+        Base.metadata.drop_all(engine)
 
 class Users(Base, UserMixin):
     __tablename__ = "users"
     id: Mapped[int] = mapped_column(primary_key=True)
-    nickname: Mapped[str] = mapped_column(String(100), unique=True)
-    password: Mapped[str] = mapped_column(String(200))
-    email: Mapped[str] = mapped_column(String(50), unique=True)
+    nickname : Mapped[str] = mapped_column(String(100), unique=True)
+    password : Mapped[str] = mapped_column(String(200))
+    email : Mapped[str] = mapped_column(String(50), unique=True)
 
-    reservations = relationship("Reservation", foreign_keys="Reservation.user_id", back_populates="user")
-    orders = relationship("Orders", foreign_keys="Orders.user_id", back_populates="user")
+    reservations = relationship("Reservation", foreign_keys="Reservation.user_id" ,back_populates="user")
+    orders = relationship("Orders", foreign_keys="Orders.user_id", back_populates='user')
 
     def set_password(self, password: str):
         self.password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
@@ -49,28 +38,25 @@ class Users(Base, UserMixin):
     def check_password(self, password: str):
         return bcrypt.checkpw(password.encode('utf-8'), self.password.encode('utf-8'))
 
-
 class Menu(Base):
     __tablename__ = "menu"
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String)
     weight: Mapped[str] = mapped_column(String)
-    ingredients: Mapped[str] = mapped_column(String)
+    ingredients : Mapped[str] = mapped_column(String)
     description: Mapped[str] = mapped_column(String)
     price: Mapped[int] = mapped_column()
     active: Mapped[bool] = mapped_column(Boolean, default=True)
     file_name: Mapped[str] = mapped_column(String)
-
 
 class Reservation(Base):
     __tablename__ = "reservation"
     id: Mapped[int] = mapped_column(primary_key=True)
     time_start: Mapped[datetime] = mapped_column(DateTime)
     type_table: Mapped[str] = mapped_column(String(20))
-    user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
+    user_id : Mapped[int] = mapped_column(ForeignKey('users.id'))
 
-    user = relationship("Users", foreign_keys="Reservation.user_id", back_populates="reservations")
-
+    user = relationship("Users", foreign_keys="Reservation.user_id" ,back_populates="reservations")
 
 class Orders(Base):
     __tablename__ = "orders"
@@ -81,17 +67,5 @@ class Orders(Base):
 
     user = relationship("Users", foreign_keys="Orders.user_id", back_populates="orders")
 
-
-if __name__ == '__main__':
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    Base.metadata.create_all(engine)
-    
 # base = Base()
 # base.create_db()
-=======
-    Base.create_db()
->>>>>>> Stashed changes
-=======
-    Base.create_db()
->>>>>>> Stashed changes
