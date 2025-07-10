@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Головне меню</title>
+</head>
+<body>
+    <h2>Наше меню</h2>
+    {% for position in all_positions %}
+        <div>
+            <img src="/static/menu/{{ position.file_name }}" alt="{{ position.name }}" width="200">
+            <h3>{{ position.name }}</h3>
+            <p>{{ position.ingredients }}</p>
+            <button><a href="/position/{{ position.name }}">Оглянути детальніше</a></button>
+        </div>
+        <hr>
+    {% endfor %}
+</body>
+</html>

@@ -10,7 +10,7 @@ load_dotenv()
 PGUSER = os.getenv("PGUSER")
 PGPASSWORD = os.getenv("PGPASSWORD")  
 
-engine = create_engine(f"postgresql+psycopg2://{PGUSER}:{PGPASSWORD}@localhost:5433/online_restaurant", echo=True)
+engine = create_engine(f"postgresql+psycopg2://{PGUSER}:{PGPASSWORD}@localhost:5432/online_restaurant", echo=True)
 Session = sessionmaker(bind=engine)
 
 class Base(DeclarativeBase):
@@ -66,7 +66,7 @@ class Orders(Base):
     user = relationship("Users", foreign_keys="Orders.user_id", back_populates="orders")
     
 if __name__ == '__main__':
-    Base.create_all()
+    Base.metadata.create_all(engine)
     
 # base = Base()
 # base.create_db()
