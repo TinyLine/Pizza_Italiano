@@ -1,23 +1,63 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Оформлення замовлення</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .basket-item { margin: 10px 0; padding: 10px; border: 1px solid #ccc; }
+        .basket-item form { display: inline; }
+        .total { font-weight: bold; margin-top: 20px; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
 </head>
 <body>
-    {%if basket%}
-        <ul>
-            {%for position in basket%}
-                <li>{{position}} , к-сть: {{basket[position]}}</li>
-            {%endfor%}
-        </ul>
-        <form method="post">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-            <input type="submit" value="Оформити замволення">
+    <h1>Ваша корзина</h1>
 
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <p class="{{ 'error' if category == 'danger' else 'success' }}">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    {% if basket_details %}
+        {% for item in basket_details %}
+            <div class="basket-item">
+                <p><strong>{{ item.name }}</strong></p>
+                <p>Ціна: {{ item.price }} грн</p>
+                <p>Кількість: {{ item.quantity }}</p>
+                <p>Вартість: {{ item.total }} грн</p>
+                <form action="{{ url_for('update_basket') }}" method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <input type="hidden" name="position_name" value="{{ item.name }}">
+                    <input type="hidden" name="action" value="increase">
+                    <button type="submit">+</button>
+                </form>
+                <form action="{{ url_for('update_basket') }}" method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <input type="hidden" name="position_name" value="{{ item.name }}">
+                    <input type="hidden" name="action" value="decrease">
+                    <button type="submit">-</button>
+                </form>
+                <form action="{{ url_for('update_basket') }}" method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <input type="hidden" name="position_name" value="{{ item.name }}">
+                    <input type="hidden" name="action" value="remove">
+                    <button type="submit">Видалити</button>
+                </form>
+            </div>
+        {% endfor %}
+        <p class="total">Загальна сума: {{ basket_details | sum(attribute='total') }} грн</p>
+        <form action="{{ url_for('create_order') }}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <button type="submit">Оформити замовлення</button>
         </form>
-    {%else%}
-        <h1>Ваш список замовлень пустий</h1>
-    {%endif%}
+    {% else %}
+        <p>Ваша корзина порожня.</p>
+    {% endif %}
+    <a href="{{ url_for('menu') }}">Повернутися до меню</a>
 </body>
 </html>

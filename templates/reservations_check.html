@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Перевірка бронювань</title>
+</head>
+<body>
+{% include '_admin_navigation.html' %}
+<h2>Перевірка бронювань</h2>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Час</th>
+        <th>Тип столика</th>
+        <th>Користувач</th>
+        <th>Дія</th>
+    </tr>
+    {% for res in all_reservations %}
+    <tr>
+        <td>{{ res.id }}</td>
+        <td>{{ res.time_start }}</td>
+        <td>{{ res.type_table }}</td>
+        <td>{{ res.user.nickname }}</td>
+        <td>
+            <form method="post">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <input type="hidden" name="reserv_id" value="{{ res.id }}">
+                <button type="submit">Видалити</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+</body>
+</html>
+
+

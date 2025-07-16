@@ -8,11 +8,17 @@ from flask_login import UserMixin
 
 import bcrypt 
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 PGUSER = os.environ.get("PGUSER")
 PGPASSWORD = os.environ.get("PGPASSWORD")
+PGHOST = os.environ.get("PGHOST")
+PGPORT = os.environ.get("PGPORT")
+PGNAME = os.environ.get("PGNAME")
 
-engine = create_engine(f"postgresql+psycopg2://{PGUSER}:{PGPASSWORD}@localhost:5432/italiano_restorano", echo=True)
+engine = create_engine(f"postgresql+psycopg2://{PGUSER}:{PGPASSWORD}@{PGHOST}:{PGPORT}/{PGNAME}", echo=True)
 Session = sessionmaker(bind=engine)
 
 class Base(DeclarativeBase):
@@ -67,5 +73,6 @@ class Orders(Base):
 
     user = relationship("Users", foreign_keys="Orders.user_id", back_populates="orders")
 
-# base = Base()
-# base.create_db()
+if __name__ == "__main__":
+    base = Base()
+    base.create_db()
