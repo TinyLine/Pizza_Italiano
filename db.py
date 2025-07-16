@@ -8,11 +8,16 @@ from flask_login import UserMixin
 
 import bcrypt 
 import os
+from dotenv import load_dotenv
 
+load_dotenv()
 PGUSER = os.environ.get("PGUSER")
 PGPASSWORD = os.environ.get("PGPASSWORD")
+PGHOST = os.environ.get("PGHOST", "localhost")
+PGPORT = os.environ.get("PGPORT", "5432")
+PGNAME = os.environ.get("PGNAME", "italiano_restorano")
 
-engine = create_engine(f"postgresql+psycopg2://{PGUSER}:{PGPASSWORD}@localhost:5432/italiano_restorano", echo=True)
+engine = create_engine(f"postgresql+psycopg2://{PGUSER}:{PGPASSWORD}@{PGHOST}:{PGPORT}/{PGNAME}", echo=True)
 Session = sessionmaker(bind=engine)
 
 class Base(DeclarativeBase):
