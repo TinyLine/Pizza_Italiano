@@ -9,5 +9,16 @@
     <p><strong>Нікнейм:</strong> {{ user.nickname }}</p>
     <p><strong>Email:</strong> {{ user.email }}</p>
     <p><strong>ID:</strong> {{ user.id }}</p>
+    <a href="{{ url_for('menu') }}" class="btn btn-primary">Зробити замовлення</a>
+{% if basket %}
+    <div>
+        <h4>Ваш кошик:</h4>
+        <ul>
+            {% for name, quantity in basket.items() %}
+                <li>{{ name }}: {{ quantity }} шт.</li>
+            {% endfor %}
+        </ul>
+        <a href="{{ url_for('create_order') }}" class="btn btn-success">Оформити замовлення</a>
+    </div>
 </body>
 </html>

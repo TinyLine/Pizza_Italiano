@@ -111,19 +111,21 @@ def login():
             user = cursor.query(Users).filter_by(nickname=nickname).first()
             if user and user.check_password(password):
                 login_user(user)
-                return redirect(url_for('home'))
+                next_page = request.args.get('next')
+                return redirect(next_page or url_for('menu'))
 
             flash('Неправильний нікнейм або пароль!', 'danger')
 
-        if request.method == 'GET':
-            session["csrf_token"] = secrets.token_hex(16)
+    if request.method == 'GET':
+        session["csrf_token"] = secrets.token_hex(16)
 
     return render_template('login.html', csrf_token=session["csrf_token"])
 
 @app.route('/profile')
 @login_required
 def profile():
-    return render_template('profile.html', user=current_user)
+    basket = session.get('basket', {})
+    return render_template('profile.html', user=current_user, basket=basket)
 
 @app.route("/add_position", methods=['GET', 'POST'])
 @login_required
@@ -162,12 +164,14 @@ def add_position():
     return render_template('add_position.html', csrf_token=session["csrf_token"])
 
 @app.route('/menu')
+@login_required
 def menu():
     with Session() as session:
         all_positions = session.query(Menu).filter_by(active=True).all()
     return render_template('menu.html', all_positions=all_positions)
 
 @app.route('/position/<name>', methods=['GET', 'POST'])
+@login_required
 def position(name):
     if request.method == 'POST':
         if request.form.get("csrf_token") != session["csrf_token"]:
@@ -176,19 +180,17 @@ def position(name):
         position_name = request.form.get('name')
         position_num = request.form.get('num')
         try:
+            if position_num is None:
+                raise ValueError("No quantity provided")
             position_num = int(position_num)
             if position_num < 1 or position_num > 10:
                 flash('Кількість має бути від 1 до 10!', 'danger')
             else:
-                if 'basket' not in session:
-                    basket = {}
-                    basket[position_name] = str(position_num)
-                    session['basket'] = basket
-                else:
-                    basket = session.get('basket', {})
-                    basket[position_name] = str(position_num)
-                    session['basket'] = basket
+                basket = session.get('basket', {})
+                basket[position_name] = str(position_num)
+                session['basket'] = basket
                 flash('Позицію додано до кошика!', 'success')
+                return redirect(url_for('create_order'))  # Переходимо одразу у кошик
         except ValueError:
             flash('Некоректна кількість! Введіть число.', 'danger')
 
@@ -236,6 +238,7 @@ def update_basket():
     return redirect(url_for('create_order'))
 
 @app.route('/create_order', methods=['GET', 'POST'])
+@login_required
 def create_order():
     basket = session.get('basket', {})
     basket_details = []
@@ -269,7 +272,8 @@ def create_order():
                     db_session.commit()
                     session.pop('basket', None)
                     db_session.refresh(new_order)
-                    return redirect(f"/my_order/{new_order.id}")
+                    flash("Замовлення оформлено!", "success")
+                    return redirect(url_for('profile'))  # Повертаємо у профіль
 
     return render_template('create_order.html', csrf_token=session.get("csrf_token"), basket_details=basket_details)
 
@@ -285,7 +289,15 @@ def my_orders():
 def my_order(id):
     with Session() as cursor:
         us_order = cursor.query(Orders).filter_by(id=id).first()
-        total_price = sum(int(cursor.query(Menu).filter_by(name=i).first().price) * int(cnt) for i, cnt in us_order.order_list.items())
+        total_price = 0
+        if us_order is not None and hasattr(us_order, "order_list") and us_order.order_list:
+            for i, cnt in us_order.order_list.items():
+                menu_item = cursor.query(Menu).filter_by(name=i).first()
+                if menu_item is not None:
+                    total_price += int(menu_item.price) * int(cnt)
+        else:
+            flash('Замовлення не знайдено!', 'danger')
+            return redirect(url_for('my_orders'))
     return render_template('my_order.html', order=us_order, total_price=total_price)
 
 @app.route("/cancel_order/<int:id>", methods=["POST"])
@@ -305,30 +317,28 @@ def reserved():
         if request.form.get("csrf_token") != session["csrf_token"]:
             return "Запит заблоковано!", 403
 
-
         table_type = request.form['table_type']
         reserved_time_start = request.form['time']
-        user_latitude = request.form['latitude']
-        user_longitude = request.form['longitude']
+        user_latitude = request.form.get('latitude')
+        user_longitude = request.form.get('longitude')
 
+        # Отключаем обязательную проверку геолокации
+        # if not user_longitude or not user_latitude:
+        #     return 'Ви не надали інформацію про своє місцезнаходження'
 
-        if not user_longitude or not user_latitude:
-            return 'Ви не надали інформацію про своє місцезнаходження'
-
-
-        user_cords = (float(user_latitude), float(user_longitude))
-        distance = geodesic(MARGANETS_COORDS, user_cords).km
-        if distance > KYIV_RADIUS_KM:
-            return "Ви знаходитеся в зоні, недоступній для бронювання"
-
+        if user_longitude and user_latitude:
+            user_cords = (float(user_latitude), float(user_longitude))
+            distance = geodesic(MARGANETS_COORDS, user_cords).km
+            if distance > KYIV_RADIUS_KM:
+                return "Ви знаходитеся в зоні, недоступній для бронювання"
 
         with Session() as cursor:
             reserved_check = cursor.query(Reservation).filter_by(type_table=table_type).count()
             user_reserved_check = cursor.query(Reservation).filter_by(user_id=current_user.id).first()
 
-
             message = f'Бронь на {reserved_time_start} столика на {table_type} людини успішно створено!'
-            if reserved_check < TABLE_NUM.get(table_type) and not user_reserved_check:
+            table_limit = TABLE_NUM.get(table_type)
+            if table_limit is not None and reserved_check < table_limit and not user_reserved_check:
                 new_reserved = Reservation(type_table=table_type, time_start=reserved_time_start, user_id=current_user.id)
                 cursor.add(new_reserved)
                 cursor.commit()
