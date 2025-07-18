@@ -9,7 +9,9 @@
     <p><strong>Нікнейм:</strong> {{ user.nickname }}</p>
     <p><strong>Email:</strong> {{ user.email }}</p>
     <p><strong>ID:</strong> {{ user.id }}</p>
-    <a href="{{ url_for('menu') }}" class="btn btn-primary">Зробити замовлення</a>
+    <a href="{{ url_for('my_orders') }}" class="btn btn-info"><button type="button">Мої замовлення</button></a>
+    <a href="{{ url_for('menu') }}" class="btn btn-primary"><button type="button">Зробити замовлення</button></a>
+    <!-- Кнопка выхода удалена по просьбе пользователя -->
 {% if basket %}
     <div>
         <h4>Ваш кошик:</h4>
@@ -20,5 +22,6 @@
         </ul>
         <a href="{{ url_for('create_order') }}" class="btn btn-success">Оформити замовлення</a>
     </div>
+{% endif %}
 </body>
 </html>

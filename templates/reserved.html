@@ -20,7 +20,18 @@
 
         <button type="submit">Забронювати</button>
     </form>
-    <h3>{{message}}</h3>
+    {% if message and 'успішно створено' in message %}
+        <div>
+            <h3>{{ message }}</h3>
+            <form action="{{ url_for('my_orders') }}">
+                <button type="submit">Перейти до моїх замовлень</button>
+            </form>
+        </div>
+    {% elif message %}
+        <div>
+            <h3>{{ message }}</h3>
+        </div>
+    {% endif %}
 
 </body>
 </html>

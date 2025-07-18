@@ -282,7 +282,8 @@ def create_order():
 def my_orders():
     with Session() as cursor:
         us_orders = cursor.query(Orders).filter_by(user_id=current_user.id).all()
-    return render_template('my_orders.html', us_orders=us_orders)
+        my_reservations = cursor.query(Reservation).filter_by(user_id=current_user.id).all()
+    return render_template('my_orders.html', us_orders=us_orders, my_reservations=my_reservations)
 
 @app.route("/my_order/<int:id>")
 @login_required
@@ -411,3 +412,9 @@ def all_users():
     with Session() as cursor:
         all_users = cursor.query(Users).with_entities(Users.id, Users.nickname, Users.email).all()
     return render_template('all_users.html', all_users=all_users)
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('home'))

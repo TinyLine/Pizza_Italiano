@@ -5,6 +5,10 @@
     <title>Головне меню</title>
 </head>
 <body>
+    <nav>
+        <button><a href="{{ url_for('profile') }}">Профіль</a></button>
+        <button><a href="{{ url_for('reserved') }}">Бронювання</a></button>
+    </nav>
     <h2>Наше меню</h2>
     {% for position in all_positions %}
         <div>

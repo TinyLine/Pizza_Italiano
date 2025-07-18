@@ -72,6 +72,12 @@ class Orders(Base):
 
     user = relationship("Users", foreign_keys="Orders.user_id", back_populates="orders")
 
+    from sqlalchemy import text
+
+    with engine.connect() as connection:
+        connection.execute(text("DELETE FROM reservation WHERE EXTRACT(YEAR FROM time_start) > 2100;"))
+        connection.commit()
+        
 if __name__ == "__main__":
     base = Base()
     base.create_db()

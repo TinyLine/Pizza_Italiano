@@ -6,6 +6,11 @@
 </head>
 <body>
 <h1>Вітаємо у нашому ресторані!</h1>
-<a href="/login">Вхід</a> | <a href="/register">Реєстрація</a>
+<form action="{{ url_for('login') }}" style="display:inline;">
+    <button type="submit">Вхід</button>
+</form>
+<form action="{{ url_for('register') }}" style="display:inline;">
+    <button type="submit">Реєстрація</button>
+</form>
 </body>
 </html>

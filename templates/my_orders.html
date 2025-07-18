@@ -10,5 +10,17 @@
         <p>Замовлення №{{ order.id }} від {{ order.order_time }}</p>
         <button><a href="/my_order/{{ order.id }}">Переглянути деталі</a></button>
     {% endfor %}
+
+    <h2>Ваші бронювання</h2>
+    {% if my_reservations %}
+        {% for reserv in my_reservations %}
+            <p>Бронь на {{ reserv.time_start }} — стіл на {{ reserv.type_table }} людини</p>
+        {% endfor %}
+    {% else %}
+        <p>У вас немає активних бронювань.</p>
+    {% endif %}
+    <form action="{{ url_for('profile') }}">
+        <button type="submit">Повернутися до профілю</button>
+    </form>
 </body>
 </html>
