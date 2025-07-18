@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Деталі замовлення</title>
+</head>
+<body>
+
+    <h2>Ваше замовлення №{{ order.id }}</h2>
+    <p>Перелік позицій:</p>
+    <ul>
+        {% for name, quantity in order.order_list.items() %}
+            <li>{{ name }} — кількість: {{ quantity }}</li>
+        {% endfor %}
+    </ul>
+    <p><strong>Дата та час:</strong> {{ order.order_time }}</p>
+    <p><strong>Загальна сума:</strong> {{ total_price }} грн</p>
+
+    <form method="post" action="/cancel_order/{{ order.id }}">
+        <button type="submit">Скасувати замовлення</button>
+    </form>
+</body>
+</html>

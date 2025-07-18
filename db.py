@@ -72,5 +72,6 @@ class Orders(Base):
 
     user = relationship("Users", foreign_keys="Orders.user_id", back_populates="orders")
 
-# base = Base()
-# base.create_db()
+if __name__ == "__main__":
+    base = Base()
+    base.create_db()

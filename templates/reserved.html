@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Бронювання столика</title>
+</head>
+<body>
+    <h2>Бронювання столика</h2>
+
+    <form method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+        <p>Оберіть тип столика</p>
+        <select name="table_type">
+            <option value="1-2">1-2 людини</option>
+            <option value="3-4">3-4 людини</option>
+            <option value="4+">Більше 4-х людей</option>
+        </select>
+        <input type="datetime-local" name="time" required>
+
+        <button type="submit">Забронювати</button>
+    </form>
+    <h3>{{message}}</h3>
+
+</body>
+</html>
