@@ -372,7 +372,8 @@ def reservations_check():
         all_reservations = cursor.query(Reservation).all()
         return render_template('reservations_check.html', all_reservations=all_reservations, csrf_token=session["csrf_token"])
 
-
+if __name__ == "__main__":
+    app.run(debug=True)
 
 @app.route('/menu_check', methods=['GET', 'POST'])
 @login_required
@@ -387,11 +388,15 @@ def menu_check():
         position_id = request.form['pos_id']
         with Session() as cursor:
             position_obj = cursor.query(Menu).filter_by(id=position_id).first()
-            if 'change_status' in request.form:
-                position_obj.active = not position_obj.active # type: ignore
-            elif 'delete_position' in request.form:
-                cursor.delete(position_obj)
-            cursor.commit()
+            if position_obj is not None:
+                if 'change_status' in request.form:
+                    position_obj.active = not position_obj.active
+                elif 'delete_position' in request.form:
+                    cursor.delete(position_obj)
+                cursor.commit()
+            else:
+                flash('Позицію не знайдено!', 'danger')
+                return redirect(url_for('menu_check'))
 
     with Session() as cursor:
         all_positions = cursor.query(Menu).all()
