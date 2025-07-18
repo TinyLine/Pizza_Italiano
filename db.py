@@ -11,12 +11,11 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
-
 PGUSER = os.environ.get("PGUSER")
 PGPASSWORD = os.environ.get("PGPASSWORD")
-PGHOST = os.environ.get("PGHOST")
-PGPORT = os.environ.get("PGPORT")
-PGNAME = os.environ.get("PGNAME")
+PGHOST = os.environ.get("PGHOST", "localhost")
+PGPORT = os.environ.get("PGPORT", "5432")
+PGNAME = os.environ.get("PGNAME", "italiano_restorano")
 
 engine = create_engine(f"postgresql+psycopg2://{PGUSER}:{PGPASSWORD}@{PGHOST}:{PGPORT}/{PGNAME}", echo=True)
 Session = sessionmaker(bind=engine)

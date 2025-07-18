@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Усі користувачі</title>
+</head>
+<body>
+{% include '_admin_navigation.html' %}
+<h2>Користувачі</h2>
+<table>
+    <tr><th>ID</th><th>Нікнейм</th><th>Email</th></tr>
+    {% for user in all_users %}
+    <tr>
+        <td>{{ user.id }}</td>
+        <td>{{ user.nickname }}</td>
+        <td>{{ user.email }}</td>
+    </tr>
+    {% endfor %}
+</table>
+</body>
+</html>
