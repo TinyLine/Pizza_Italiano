@@ -89,7 +89,7 @@ main {
   z-index: 1;
 }
 
-admin-button{
+.admin-button{
   margin-left: 44px;
   margin-top: 20px;
   background-color: var(--rasta-red);
@@ -102,7 +102,7 @@ admin-button{
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
-admin-nav {
+.admin-nav {
   list-style-type: none
 }
 button {
