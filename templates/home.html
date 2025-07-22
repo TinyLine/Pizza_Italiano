@@ -1,16 +1,42 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-    <meta charset="UTF-8">
-    <title>Головна</title>
+  <meta charset="UTF-8">
+  <title>Rasta Italiano Ресторан</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/rasta.css') }}">
 </head>
 <body>
-<h1>Вітаємо у нашому ресторані!</h1>
-<form action="{{ url_for('login') }}" style="display:inline;">
-    <button type="submit">Вхід</button>
-</form>
-<form action="{{ url_for('register') }}" style="display:inline;">
-    <button type="submit">Реєстрація</button>
-</form>
+  <header>
+    Rasta Italiano Ресторан
+  </header>
+
+  <nav>
+    <a href="{{ url_for('home') }}">Головна</a>
+    <a href="{{ url_for('menu') }}">Меню</a>
+    <a href="#">Про нас</a>
+    <a href="#">Контакти</a>
+  </nav>
+
+  <main>
+    <h1>Ласкаво просимо!</h1>
+    <p>Відчуй смак Ямайки — яскраво, пряно, чілово.</p>
+    <form action="{{ url_for('login') }}" style="display:inline;">
+        <button type="submit">Вхід</button>
+    </form>
+    <form action="{{ url_for('register') }}" style="display:inline;">
+        <button type="submit">Реєстрація</button>
+    </form>
+    <form action="{{ url_for('reserved') }}" style="display:inline;">
+        <button type="submit">Забронювати столик</button>
+    </form>
+    <form action="{{ url_for('profile') }}" style="display:inline;">
+        <button type="submit">Профіль</button>
+    </form>
+  </main>
+
+  <footer>
+    &copy; 2025 Rasta Italiano Ресторан — Хай буде з нами Джа!
+  </footer>
+
 </body>
 </html>

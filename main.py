@@ -4,7 +4,7 @@ from flask_login import login_required, current_user, login_user, logout_user # 
 
 from db import Session, Users, Menu, Orders, Reservation
 from flask_login import LoginManager
-from datetime import datetime
+from datetime import datetime, timedelta
 from geopy.distance import geodesic
 
 import os
@@ -318,33 +318,53 @@ def reserved():
         if request.form.get("csrf_token") != session["csrf_token"]:
             return "Запит заблоковано!", 403
 
-        table_type = request.form['table_type']
+        try:
+            people_count = int(request.form['people_count'])
+        except (KeyError, ValueError):
+            flash('Некоректна кількість людей!', 'danger')
+            return render_template('reserved.html', csrf_token=session["csrf_token"])
+
+        if people_count > 20:
+            flash('Занадто велика кількість людей для одного столика!', 'danger')
+            return render_template('reserved.html', csrf_token=session["csrf_token"])
+
         reserved_time_start = request.form['time']
+        try:
+            reserved_dt = datetime.strptime(reserved_time_start, "%Y-%m-%dT%H:%M")
+        except ValueError:
+            flash('Некоректний формат дати!', 'danger')
+            return render_template('reserved.html', csrf_token=session["csrf_token"])
+
+        now = datetime.now()
+        max_date = now + timedelta(days=30)
+        if reserved_dt > max_date:
+            flash('Дата бронювання не може бути більше ніж на 30 днів вперед!', 'danger')
+            return render_template('reserved.html', csrf_token=session["csrf_token"])
+        if reserved_dt < now:
+            flash('Дата бронювання не може бути в минулому!', 'danger')
+            return render_template('reserved.html', csrf_token=session["csrf_token"])
+
         user_latitude = request.form.get('latitude')
         user_longitude = request.form.get('longitude')
 
-        # Отключаем обязательную проверку геолокации
-        # if not user_longitude or not user_latitude:
-        #     return 'Ви не надали інформацію про своє місцезнаходження'
-
-        if user_longitude and user_latitude:
-            user_cords = (float(user_latitude), float(user_longitude))
-            distance = geodesic(MARGANETS_COORDS, user_cords).km
-            if distance > KYIV_RADIUS_KM:
-                return "Ви знаходитеся в зоні, недоступній для бронювання"
+        # Определяем тип столика по количеству людей
+        if people_count <= 2:
+            table_type = "1-2"
+        elif 3 <= people_count <= 4:
+            table_type = "3-4"
+        else:
+            table_type = "4+"
 
         with Session() as cursor:
             reserved_check = cursor.query(Reservation).filter_by(type_table=table_type).count()
             user_reserved_check = cursor.query(Reservation).filter_by(user_id=current_user.id).first()
 
-            message = f'Бронь на {reserved_time_start} столика на {table_type} людини успішно створено!'
+            message = f'Бронь на {reserved_time_start} столика на {people_count} людини успішно створено!'
             table_limit = TABLE_NUM.get(table_type)
-            if table_limit is not None and reserved_check < table_limit and not user_reserved_check:
+            if table_limit is not None and reserved_check < table_limit:
                 new_reserved = Reservation(type_table=table_type, time_start=reserved_time_start, user_id=current_user.id)
                 cursor.add(new_reserved)
                 cursor.commit()
-            elif user_reserved_check:
-                message = 'Можна мати лише одну активну бронь'
             else:
                 message = 'На жаль, бронь такого типу стола наразі неможлива'
             return render_template('reserved.html', message=message, csrf_token=session["csrf_token"])

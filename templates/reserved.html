@@ -3,28 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <title>Бронювання столика</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/rasta.css') }}">
 </head>
 <body>
     <h2>Бронювання столика</h2>
 
-    <form method="post">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="post" class="rasta-form">
         <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
-        <p>Оберіть тип столика</p>
-        <select name="table_type">
-            <option value="1-2">1-2 людини</option>
-            <option value="3-4">3-4 людини</option>
-            <option value="4+">Більше 4-х людей</option>
-        </select>
-        <input type="datetime-local" name="time" required>
+        <label for="people_count" class="rasta-label">Кількість людей:</label>
+        <input type="number" id="people_count" name="people_count" class="rasta-input" min="1" max="20" required>
+
+        <label for="datetime" class="rasta-label">Дата та час:</label>
+        <input type="datetime-local" id="datetime" name="time" class="rasta-input" required>
 
         <button type="submit">Забронювати</button>
     </form>
     {% if message and 'успішно створено' in message %}
         <div>
             <h3>{{ message }}</h3>
-            <form action="{{ url_for('my_orders') }}">
-                <button type="submit">Перейти до моїх замовлень</button>
+            <form action="{{ url_for('menu') }}">
+                <button type="submit">Перейти до меню</button>
             </form>
         </div>
     {% elif message %}

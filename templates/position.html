@@ -3,12 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ position.name if position else 'Позиція не знайдена' }}</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .error { color: red; }
-        .success { color: green; }
-        .form-group { margin: 10px 0; }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/rasta.css') }}">
 </head>
 <body>
     {% if position %}

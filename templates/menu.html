@@ -3,12 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Головне меню</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/rasta.css') }}">
 </head>
 <body>
     <nav>
         <button><a href="{{ url_for('profile') }}">Профіль</a></button>
         <button><a href="{{ url_for('reserved') }}">Бронювання</a></button>
     </nav>
+    <form action="{{ url_for('home') }}">
+        <button type="submit">На головну</button>
+    </form>
     <h2>Наше меню</h2>
     {% for position in all_positions %}
         <div>

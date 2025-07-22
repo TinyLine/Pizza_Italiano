@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <title>Профіль користувача</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/rasta.css') }}">
 </head>
 <body>
     <h1>Профіль користувача</h1>
@@ -11,7 +12,6 @@
     <p><strong>ID:</strong> {{ user.id }}</p>
     <a href="{{ url_for('my_orders') }}" class="btn btn-info"><button type="button">Мої замовлення</button></a>
     <a href="{{ url_for('menu') }}" class="btn btn-primary"><button type="button">Зробити замовлення</button></a>
-    <!-- Кнопка выхода удалена по просьбе пользователя -->
 {% if basket %}
     <div>
         <h4>Ваш кошик:</h4>
@@ -23,5 +23,8 @@
         <a href="{{ url_for('create_order') }}" class="btn btn-success">Оформити замовлення</a>
     </div>
 {% endif %}
+    <form action="{{ url_for('home') }}">
+        <button type="submit">На головну</button>
+    </form>
 </body>
 </html>

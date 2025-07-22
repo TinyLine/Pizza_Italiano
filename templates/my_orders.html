@@ -3,13 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Мої замовлення</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/rasta.css') }}">
 </head>
 <body>
     <h2>Ваші замовлення</h2>
-    {% for order in us_orders %}
-        <p>Замовлення №{{ order.id }} від {{ order.order_time }}</p>
-        <button><a href="/my_order/{{ order.id }}">Переглянути деталі</a></button>
-    {% endfor %}
+    {% if us_orders %}
+        {% for order in us_orders %}
+            <p>Замовлення №{{ order.id }} від {{ order.order_time }}</p>
+            <button><a href="/my_order/{{ order.id }}">Переглянути деталі</a></button>
+        {% endfor %}
+    {% else %}
+        <p>У вас немає замовлень.</p>
+    {% endif %}
 
     <h2>Ваші бронювання</h2>
     {% if my_reservations %}
