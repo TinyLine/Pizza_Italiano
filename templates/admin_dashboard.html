@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Адмін панель</title>
+</head>
+<body>
+
+  {% include '_admin_navigation.html' %}
+
+  <nav>
+    <ul>
+      <li><a href="{{ url_for('menu_check') }}">Перевірка меню</a></li>
+      <li><a href="{{ url_for('reservations_check') }}">Бронювання</a></li>
+      <li><a href="{{ url_for('all_users') }}">Користувачі</a></li>
+      <li><a href="{{ url_for('admin_navigation') }}">Навігація (ця сторінка)</a></li>
+    </ul>
+  </nav>
+
+  <form action="{{ url_for('home') }}">
+      <button type="submit">На головну</button>
+  </form>
+
+</body>
+</html>
+{% endblock %}
+{% extends "base.html" %}
+
+{% block content %}
