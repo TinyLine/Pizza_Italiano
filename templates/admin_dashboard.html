@@ -10,7 +10,7 @@
   {% include '_admin_navigation.html' %}
 
   <nav>
-    <ul>
+    <ul class="admin-nav">
       <li><a href="{{ url_for('menu_check') }}">Перевірка меню</a></li>
       <li><a href="{{ url_for('reservations_check') }}">Бронювання</a></li>
       <li><a href="{{ url_for('all_users') }}">Користувачі</a></li>
@@ -18,7 +18,7 @@
   </nav>
 
   <form action="{{ url_for('home') }}">
-      <button type="submit">На головну</button>
+      <button class="admin-button" type="submit">На головну</button>
   </form>
 
 </body>

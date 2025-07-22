@@ -89,6 +89,22 @@ main {
   z-index: 1;
 }
 
+admin-button{
+  margin-left: 44px;
+  margin-top: 20px;
+  background-color: var(--rasta-red);
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+admin-nav {
+  list-style-type: none
+}
 button {
   background-color: var(--rasta-red);
   color: white;
