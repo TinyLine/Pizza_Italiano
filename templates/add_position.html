@@ -1,29 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Додавання позиції</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/rasta.css') }}">
 </head>
 <body>
-<h2>Додавання нової позиції</h2>
-{% include '_admin_navigation.html' %}
-    <form method="post" enctype="multipart/form-data">
+
+  {% include '_admin_navigation.html' %}
+
+  <main>
+    <h2>Додавання нової позиції</h2>
+
+    <form class="rasta-form" method="post" enctype="multipart/form-data">
         <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
-        <input type="text" name="name" placeholder="Назва позиції" required>
+        <label class="rasta-label" for="name">Назва позиції</label>
+        <input class="rasta-input" type="text" id="name" name="name" placeholder="Наприклад: Маргарита" required>
 
-        <input type="file" name="img" accept="image/*" required>
+        <label class="rasta-label" for="img">Зображення</label>
+        <input class="rasta-input" type="file" id="img" name="img" accept="image/*" required>
 
-        <textarea name="ingredients" placeholder="Інгредієнти" required></textarea>
+        <label class="rasta-label" for="ingredients">Інгредієнти</label>
+        <textarea class="rasta-input" id="ingredients" name="ingredients" rows="2" placeholder="Наприклад: Сир, томати, базилік" required></textarea>
 
-        <textarea name="description" placeholder="Опис" required></textarea>
+        <label class="rasta-label" for="description">Опис</label>
+        <textarea class="rasta-input" id="description" name="description" rows="3" placeholder="Короткий опис страви" required></textarea>
 
-        <input type="number" name="price" placeholder="Ціна (грн)" required>
+        <label class="rasta-label" for="price">Ціна (грн)</label>
+        <input class="rasta-input" type="number" id="price" name="price" placeholder="Наприклад: 180" required>
 
-        <input type="number" name="weight" placeholder="Вага (г)" required>
+        <label class="rasta-label" for="weight">Вага (г)</label>
+        <input class="rasta-input" type="number" id="weight" name="weight" placeholder="Наприклад: 400" required>
 
         <button type="submit">Додати товар</button>
     </form>
+  </main>
+
 </body>
 </html>
