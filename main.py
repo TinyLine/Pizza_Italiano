@@ -434,6 +434,8 @@ def all_users():
 @app.route('/admin_dashboard')
 @login_required
 def admin_dashboard():
+    if current_user.nickname != 'Admin':
+        return redirect(url_for('home'))
     return render_template('admin_dashboard.html')
 
 @app.route('/logout')
