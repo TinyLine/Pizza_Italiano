@@ -11,7 +11,7 @@
     <p>Перелік позицій:</p>
     <ul>
         {% for name, quantity in order.order_list.items() %}
-            <li>{{ name }} — кількість: {{ quantity }}</li>
+            <li class="admin-nav">{{ name }} — кількість: {{ quantity }}</li>
         {% endfor %}
     </ul>
     <p><strong>Дата та час:</strong> {{ order.order_time }}</p>
