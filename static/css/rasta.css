@@ -71,7 +71,7 @@ nav {
 }
 
 nav a {
-  color: white;
+  color: var(--rasta-bg);
   margin: 0 1rem;
   text-decoration: none;
   font-weight: bold;
@@ -127,6 +127,19 @@ button {
 button:hover {
   background-color: var(--rasta-green);
 }
+
+.button_detail {
+  background-color: var(--rasta-yellow);
+  color: var(--rasta-black);
+  padding: 0.8rem 1.5rem;
+  border: none;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
 
 footer {
   background-color: var(--rasta-black);
