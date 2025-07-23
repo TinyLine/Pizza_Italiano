@@ -129,8 +129,8 @@ button:hover {
 }
 
 .button_detail {
-  background-color: var(--rasta-yellow);
-  color: var(--rasta-black);
+  background-color: var(--rasta-red);
+  color: white;
   padding: 0.8rem 1.5rem;
   border: none;
   font-size: 1rem;
@@ -138,6 +138,7 @@ button:hover {
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  margin: 0.5rem;
 }
 
 
