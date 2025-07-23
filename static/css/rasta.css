@@ -181,3 +181,12 @@ h1, h2, h3 {
 .rasta-select:focus {
   border-color: var(--rasta-red);
 } 
+
+.menu-item{
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  padding: 1rem;
+  margin: 1rem auto;
+  max-width: 600px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }

@@ -15,7 +15,7 @@
     </form>
     <h2>Наше меню</h2>
     {% for position in all_positions %}
-        <div>
+        <div class="menu-item">
             <img src="/static/menu/{{ position.file_name }}" alt="{{ position.name }}" width="200">
             <h3>{{ position.name }}</h3>
             <p>{{ position.ingredients }}</p>
